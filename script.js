@@ -97,6 +97,7 @@ function createDomFaceupCard(id, value) {
     // <div style="display: none;" id="card-1" alt="faceup card">
     const elem = document.createElement("div");
     elem.style.display = "none";
+    elem.style.border = "1px solid black";
     elem.id = id;
     elem.alt = "faceup card";
     elem.textContent = value;
@@ -109,6 +110,7 @@ function clickLogic(e) {
     const self = e.currentTarget;
     self.style.display = "none";
     self.nextElementSibling.style.display = "block";
+    self.nextElementSibling.style.border = "1px solid blue";
 
     if (!selectedCard1) {
         selectedCard1 = self;
@@ -122,6 +124,8 @@ function clickLogic(e) {
     // compare cards
     if (selectedCard1.cardNumber === selectedCard2.cardNumber) {
         alert(`Cards ${selectedCard1.cardNumber} and ${selectedCard2.cardNumber} match!`);
+        selectedCard1.nextElementSibling.style.border = "1px solid black";
+        selectedCard2.nextElementSibling.style.border = "1px solid black";
         cardMatchCount++;
     } else {
         alert(`Cards ${selectedCard1.cardNumber} and ${selectedCard2.cardNumber} don't match.`);
@@ -137,8 +141,9 @@ function clickLogic(e) {
 
     isWin = checkWinCondition();
     if (isWin) {
-        // change alert to win message
+        // TODO: change alert to win message
         alert("You won!");
+        // TODO: disable click listener from 2 remaining cards. maybe show them too?
     }
 }
 
