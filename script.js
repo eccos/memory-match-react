@@ -1,3 +1,13 @@
+
+function createUniqueCards(gridSize) {
+    const halfGrid = gridSize / 2;
+    const uniqueCards = [];
+    for (let i = 0; i < halfGrid; i++) {
+        uniqueCards.push(i + 1);
+    }
+    return uniqueCards;
+}
+
 function shuffle(array) {
     let currentIndex = array.length;
     let randomIndex;
@@ -11,15 +21,6 @@ function shuffle(array) {
             array[randomIndex], array[currentIndex]];
     }
     return array;
-}
-
-function createUniqueCards(gridSize) {
-    const halfGrid = gridSize / 2;
-    const uniqueCards = [];
-    for (let i = 0; i < halfGrid; i++) {
-        uniqueCards.push(i + 1);
-    }
-    return uniqueCards;
 }
 
 function createCustomGrid(rowCardLen, colCardLen) {
@@ -101,13 +102,12 @@ function clickLogic(e) {
     // compare cards
     if (selectedCard1.cardNumber === selectedCard2.cardNumber) {
         alert(`Cards ${selectedCard1.cardNumber} and ${selectedCard2.cardNumber} match!`);
-        // remove cards, click logic, card image
-        cards.pop();
-        cards.pop();
+        // remove click logic, card image
         selectedCard1.style.visibility = "hidden";
         selectedCard2.style.visibility = "hidden";
         selectedCard1.removeEventListener("click", clickLogic);
         selectedCard2.removeEventListener("click", clickLogic);
+        cardMatchCount++;
     } else {
         alert(`Cards ${selectedCard1.cardNumber} and ${selectedCard2.cardNumber} don't match.`);
         // flip cards facedown
@@ -115,26 +115,39 @@ function clickLogic(e) {
         selectedCard2.style.visibility = "visible";
         // selectedCard1.nextElementSibling.style.visibility = "hidden";
         // selectedCard2.nextElementSibling.style.visibility = "hidden";
-
     }
 
     selectedCard1 = null;
     selectedCard2 = null;
 
-    isWin = checkWinCondition(cards);
+    isWin = checkWinCondition();
     if (isWin) {
+        // change alert to win message
         alert("You won!");
+        resetGame();
     }
 }
 
-function checkWinCondition(cardIndexLabels) {
-    if (cardIndexLabels.length > 2) { return false; }
-    return true;
+function checkWinCondition() {
+    // win early if only 2 cards remain
+    return (cardMatchCount < halfGridSize - 1) ? false : true;
 }
 
-let selectedCard1;
-let selectedCard2;
+function resetGame() {
+    // reset globals and grid
+    selectedCard1 = null;
+    selectedCard2 = null;
+    cardMatchCount = 0;
+    halfGridSize = 0;
+    isWin = false;
 
+    grid.innerHTML = null;
+}
+
+let selectedCard1 = null;
+let selectedCard2 = null;
+let cardMatchCount = 0;
+let halfGridSize = 0;
 let isWin = false;
 
 /**
@@ -143,10 +156,11 @@ let isWin = false;
 const selectGrid = document.querySelector("#select-grid-size");
 const grid = document.querySelector("#card-grid");
 selectGrid.addEventListener("change", (e) => {
-    grid.innerHTML = "";
+    resetGame();
     const [x, y] = e.currentTarget.value.split("x");
+    halfGridSize = (x * y) / 2;
     const gridRows = createCustomGrid(x, y);
     gridRows.forEach(row => {
         grid.appendChild(row);
-    })
+    });
 });
