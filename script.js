@@ -52,9 +52,11 @@ function createCustomGrid(rowCardLen, colCardLen) {
             // create html col & create/append card
             const col = createDomCol();
             const cardId = "card-" + (cardIndex + 1);
-            const card = createDomCard(cardId, cards[cardIndex]);
+            const card = createDomFacedownCard(cardId, cards[cardIndex]);
+            const faceupCard = createDomFaceupCard(cardId, cards[cardIndex]);
             cardIndex++;
             col.appendChild(card);
+            col.appendChild(faceupCard);
             row.appendChild(col);
         }
         rows.push(row);
@@ -73,25 +75,40 @@ function createDomCol() {
     // <div class="col">
     const elem = document.createElement("div");
     elem.className = "col";
+    elem.style.margin = "auto";
     return elem;
 }
 
-function createDomCard(id, value) {
+function createDomFacedownCard(id, value) {
     // <img src="card-back.png" class="img-fluid" id="card-1" alt="facedown card">
     const elem = document.createElement("img");
+    elem.style.display = "block";
     elem.src = "card-back.png";
     elem.className = "img-fluid";
     elem.id = id;
     elem.alt = "facedown card";
     elem.cardNumber = value;
+    elem.style.margin = "auto";
     elem.onclick = clickLogic;
+    return elem;
+}
+
+function createDomFaceupCard(id, value) {
+    // <div style="display: none;" id="card-1" alt="faceup card">
+    const elem = document.createElement("div");
+    elem.style.display = "none";
+    elem.id = id;
+    elem.alt = "faceup card";
+    elem.textContent = value;
+    elem.style.fontSize = "8em";
+    elem.style.textAlign = "center";
     return elem;
 }
 
 function clickLogic(e) {
     const self = e.currentTarget;
-    self.style.visibility = "hidden";
-    // self.nextElementSibling.style.visibility = "visible";
+    self.style.display = "none";
+    self.nextElementSibling.style.display = "block";
 
     if (!selectedCard1) {
         selectedCard1 = self;
@@ -102,19 +119,14 @@ function clickLogic(e) {
     // compare cards
     if (selectedCard1.cardNumber === selectedCard2.cardNumber) {
         alert(`Cards ${selectedCard1.cardNumber} and ${selectedCard2.cardNumber} match!`);
-        // remove click logic, card image
-        selectedCard1.style.visibility = "hidden";
-        selectedCard2.style.visibility = "hidden";
-        selectedCard1.removeEventListener("click", clickLogic);
-        selectedCard2.removeEventListener("click", clickLogic);
         cardMatchCount++;
     } else {
         alert(`Cards ${selectedCard1.cardNumber} and ${selectedCard2.cardNumber} don't match.`);
         // flip cards facedown
-        selectedCard1.style.visibility = "visible";
-        selectedCard2.style.visibility = "visible";
-        // selectedCard1.nextElementSibling.style.visibility = "hidden";
-        // selectedCard2.nextElementSibling.style.visibility = "hidden";
+        selectedCard1.style.display = "block";
+        selectedCard2.style.display = "block";
+        selectedCard1.nextElementSibling.style.display = "none";
+        selectedCard2.nextElementSibling.style.display = "none";
     }
 
     selectedCard1 = null;
