@@ -1,8 +1,6 @@
 # Memory Match Game
 
-[Try Me](https://eccos.github.io/nucamp-memory-match)
-
-By [eccos](https://github.com/eccos), [awase123](https://github.com/awase123), [dawiscoding](https://github.com/dawiscoding), [SpencerNguyen1006](https://github.com/SpencerNguyen1006) 
+[Try Me](https://eccos.github.io/memory-match)
 
 Match pairs of cards to win
 
@@ -42,4 +40,4 @@ Cards are facedown in a grid pattern. Select 2 cards to flip them faceup. If the
 If you run into any issues, create an issue via the Issues tab.  
 
 GNU General Public License v3.0  
-Copyright (c) 2023 eccos, awase123, dawiscoding, SpencerNguyen1006
+Copyright (c) 2023 eccos
