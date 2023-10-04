@@ -1,4 +1,33 @@
 
+let selectedCard1 = null;
+let selectedCard2 = null;
+let cardMatchCount = 0;
+let halfGridSize = 0;
+let isWin = false;
+let isLockedBoard = false;
+
+let moveCount = 0;
+const moveCountSpan = document.querySelector("#move-count");
+
+/**
+ * @type {HTMLSelectElement}
+ */
+const selectGrid = document.querySelector("#select-grid-size");
+const startBtn = document.querySelector("#start");
+const grid = document.querySelector("#card-grid");
+
+startBtn.addEventListener("click", startGame);
+
+function startGame() {
+    resetGame();
+    const [x, y] = selectGrid.value.split("x");
+    halfGridSize = (x * y) / 2;
+    const gridRows = createCustomGrid(x, y);
+    gridRows.forEach(row => {
+        grid.appendChild(row);
+    });
+}
+
 function createUniqueCards(gridSize) {
     const halfGrid = gridSize / 2;
     const uniqueCards = [];
@@ -89,7 +118,7 @@ function createDomFacedownCard(id, value) {
     elem.alt = "facedown card";
     elem.cardNumber = value;
     elem.style.margin = "auto";
-    elem.onclick = clickLogic;
+    elem.onclick = flipCard;
     return elem;
 }
 
@@ -106,7 +135,7 @@ function createDomFaceupCard(id, value) {
     return elem;
 }
 
-function clickLogic(e) {
+function flipCard(e) {
     if (isLockedBoard) return;
     const self = e.currentTarget;
     self.style.display = "none";
@@ -172,33 +201,4 @@ function resetGame() {
     moveCountSpan.textContent = moveCount;
 
     grid.innerHTML = null;
-}
-
-let selectedCard1 = null;
-let selectedCard2 = null;
-let cardMatchCount = 0;
-let halfGridSize = 0;
-let isWin = false;
-let isLockedBoard = false;
-
-let moveCount = 0;
-const moveCountSpan = document.querySelector("#move-count");
-
-/**
- * @type {HTMLSelectElement}
- */
-const selectGrid = document.querySelector("#select-grid-size");
-const startBtn = document.querySelector("#start");
-const grid = document.querySelector("#card-grid");
-
-startBtn.addEventListener("click", startGame);
-
-function startGame() {
-    resetGame();
-    const [x, y] = selectGrid.value.split("x");
-    halfGridSize = (x * y) / 2;
-    const gridRows = createCustomGrid(x, y);
-    gridRows.forEach(row => {
-        grid.appendChild(row);
-    });
 }
