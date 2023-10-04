@@ -188,13 +188,17 @@ const moveCountSpan = document.querySelector("#move-count");
  * @type {HTMLSelectElement}
  */
 const selectGrid = document.querySelector("#select-grid-size");
+const startBtn = document.querySelector("#start");
 const grid = document.querySelector("#card-grid");
-selectGrid.addEventListener("change", (e) => {
+
+startBtn.addEventListener("click", startGame);
+
+function startGame() {
     resetGame();
-    const [x, y] = e.currentTarget.value.split("x");
+    const [x, y] = selectGrid.value.split("x");
     halfGridSize = (x * y) / 2;
     const gridRows = createCustomGrid(x, y);
     gridRows.forEach(row => {
         grid.appendChild(row);
     });
-});
+}
