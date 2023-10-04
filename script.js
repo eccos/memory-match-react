@@ -107,6 +107,7 @@ function createDomFaceupCard(id, value) {
 }
 
 function clickLogic(e) {
+    if (isLockedBoard) return;
     const self = e.currentTarget;
     self.style.display = "none";
     self.nextElementSibling.style.display = "block";
@@ -123,21 +124,27 @@ function clickLogic(e) {
 
     // compare cards
     if (selectedCard1.cardNumber === selectedCard2.cardNumber) {
-        alert(`Cards ${selectedCard1.cardNumber} and ${selectedCard2.cardNumber} match!`);
+        // alert(`Cards ${selectedCard1.cardNumber} and ${selectedCard2.cardNumber} match!`);
         selectedCard1.nextElementSibling.style.border = "1px solid black";
         selectedCard2.nextElementSibling.style.border = "1px solid black";
         cardMatchCount++;
+        selectedCard1 = null;
+        selectedCard2 = null;
     } else {
-        alert(`Cards ${selectedCard1.cardNumber} and ${selectedCard2.cardNumber} don't match.`);
+        // alert(`Cards ${selectedCard1.cardNumber} and ${selectedCard2.cardNumber} don't match.`);
+        isLockedBoard = true;
         // flip cards facedown
-        selectedCard1.style.display = "block";
-        selectedCard2.style.display = "block";
-        selectedCard1.nextElementSibling.style.display = "none";
-        selectedCard2.nextElementSibling.style.display = "none";
+        setTimeout(() => {
+            selectedCard1.style.display = "block";
+            selectedCard2.style.display = "block";
+            selectedCard1.nextElementSibling.style.display = "none";
+            selectedCard2.nextElementSibling.style.display = "none";
+            selectedCard1 = null;
+            selectedCard2 = null;
+            isLockedBoard = false;
+        }, 1000);
     }
 
-    selectedCard1 = null;
-    selectedCard2 = null;
 
     isWin = checkWinCondition();
     if (isWin) {
@@ -159,6 +166,7 @@ function resetGame() {
     cardMatchCount = 0;
     halfGridSize = 0;
     isWin = false;
+    isLockedBoard = false;
 
     moveCount = 0;
     moveCountSpan.textContent = moveCount;
@@ -171,6 +179,7 @@ let selectedCard2 = null;
 let cardMatchCount = 0;
 let halfGridSize = 0;
 let isWin = false;
+let isLockedBoard = false;
 
 let moveCount = 0;
 const moveCountSpan = document.querySelector("#move-count");
