@@ -116,6 +116,9 @@ function clickLogic(e) {
     }
     selectedCard2 = self;
 
+    moveCount++;
+    moveCountSpan.textContent = moveCount;
+
     // compare cards
     if (selectedCard1.cardNumber === selectedCard2.cardNumber) {
         alert(`Cards ${selectedCard1.cardNumber} and ${selectedCard2.cardNumber} match!`);
@@ -136,7 +139,6 @@ function clickLogic(e) {
     if (isWin) {
         // change alert to win message
         alert("You won!");
-        resetGame();
     }
 }
 
@@ -153,6 +155,9 @@ function resetGame() {
     halfGridSize = 0;
     isWin = false;
 
+    moveCount = 0;
+    moveCountSpan.textContent = moveCount;
+
     grid.innerHTML = null;
 }
 
@@ -161,6 +166,9 @@ let selectedCard2 = null;
 let cardMatchCount = 0;
 let halfGridSize = 0;
 let isWin = false;
+
+let moveCount = 0;
+const moveCountSpan = document.querySelector("#move-count");
 
 /**
  * @type {HTMLSelectElement}
