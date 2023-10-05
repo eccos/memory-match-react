@@ -196,9 +196,8 @@ function flipCard(e) {
 
     isWin = checkWinCondition();
     if (isWin) {
-        const moveCounter = moveCount;
-        resetGame();
-        grid.textContent = `YOU WIN! It took you ${moveCounter} moves.`;
+        grid.innerHTML = null;
+        grid.textContent = `YOU WIN! It took you ${moveCount} moves.`;
     }
 }
 
