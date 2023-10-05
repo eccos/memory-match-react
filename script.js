@@ -210,18 +210,18 @@ function checkWinCondition() {
 // https://www.w3schools.com/howto/howto_js_countdown.asp
 // set date we're counting down to
 // get current date/time
-let countDownDate = new Date();
+let countdownDate = new Date();
 // add min & sec to it
 // TODO: implement time entry/selection for custom countdown
-countDownDate.setMinutes(countDownDate.getMinutes() + 5);
-countDownDate.setSeconds(countDownDate.getSeconds() + 10);
+countdownDate.setMinutes(countdownDate.getMinutes() + 5);
+countdownDate.setSeconds(countdownDate.getSeconds() + 10);
 
-let intervalId = setInterval(function () {
-    const timer = document.getElementById("timer");
+let countdownIntervalId = setInterval(() => {
+    const timer = document.getElementById("countdown-timer");
     // get today's date and time
     let now = new Date();
     // find distance between now and countdown date
-    let distance = countDownDate - now;
+    let distance = countdownDate - now;
     let distDate = new Date(distance);
     // get minutes, seconds, milliseconds
     let minutes = distDate.getMinutes();
@@ -234,7 +234,25 @@ let intervalId = setInterval(function () {
     timer.innerHTML = `${minutes}:${seconds}:${ms}`;
     // countdown finished
     if (distance < 0) {
-        clearInterval(intervalId);
+        clearInterval(countdownIntervalId);
         timer.innerHTML = "EXPIRED";
     }
-}, 50);
+}, 33);
+
+let zeroDate = new Date(0);
+let msDelay = 33;
+let msCount = 0;
+let timerIntervalId = setInterval(() => {
+    const timer = document.getElementById("timer");
+    msCount += msDelay;
+    let msDate = new Date(msCount);
+    // get minutes, seconds, milliseconds
+    let minutes = msDate.getMinutes();
+    let seconds = msDate.getSeconds();
+    let ms = msDate.getMilliseconds();
+    // add leading zeros & display
+    minutes = minutes.toString().padStart(2, "0");
+    seconds = seconds.toString().padStart(2, "0");
+    ms = ms.toString().padStart(3, "0");
+    timer.innerHTML = `${minutes}:${seconds}:${ms}`;
+}, msDelay);
