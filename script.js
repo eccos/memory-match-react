@@ -18,6 +18,20 @@ const grid = document.querySelector("#card-grid");
 
 startBtn.addEventListener("click", startGame);
 
+function resetGame() {
+    selectedCard1 = null;
+    selectedCard2 = null;
+    cardMatchCount = 0;
+    halfGridSize = 0;
+    isWin = false;
+    isLockedBoard = false;
+
+    moveCount = 0;
+    moveCountSpan.textContent = moveCount;
+
+    grid.innerHTML = null;
+}
+
 function startGame() {
     resetGame();
     const [x, y] = selectGrid.value.split("x");
@@ -135,12 +149,39 @@ function createDomFaceupCard(id, value) {
     return elem;
 }
 
+function showCard(card) {
+    card.style.display = "none";
+    card.nextElementSibling.style.display = "block";
+    card.nextElementSibling.style.border = "1px solid blue";
+}
+
+function hideCards() {
+    selectedCard1.style.display = "block";
+    selectedCard2.style.display = "block";
+    selectedCard1.nextElementSibling.style.display = "none";
+    selectedCard2.nextElementSibling.style.display = "none";
+    selectedCard1 = null;
+    selectedCard2 = null;
+    isLockedBoard = false;
+}
+
+function checkCards() {
+    if (selectedCard1.cardNumber === selectedCard2.cardNumber) {
+        selectedCard1.nextElementSibling.style.border = "1px solid black";
+        selectedCard2.nextElementSibling.style.border = "1px solid black";
+        cardMatchCount++;
+        selectedCard1 = null;
+        selectedCard2 = null;
+    } else {
+        isLockedBoard = true;
+        setTimeout(hideCards, 1000);
+    }
+}
+
 function flipCard(e) {
     if (isLockedBoard) return;
     const self = e.currentTarget;
-    self.style.display = "none";
-    self.nextElementSibling.style.display = "block";
-    self.nextElementSibling.style.border = "1px solid blue";
+    showCard(self);
 
     if (!selectedCard1) {
         selectedCard1 = self;
@@ -151,54 +192,17 @@ function flipCard(e) {
     moveCount++;
     moveCountSpan.textContent = moveCount;
 
-    // compare cards
-    if (selectedCard1.cardNumber === selectedCard2.cardNumber) {
-        // alert(`Cards ${selectedCard1.cardNumber} and ${selectedCard2.cardNumber} match!`);
-        selectedCard1.nextElementSibling.style.border = "1px solid black";
-        selectedCard2.nextElementSibling.style.border = "1px solid black";
-        cardMatchCount++;
-        selectedCard1 = null;
-        selectedCard2 = null;
-    } else {
-        // alert(`Cards ${selectedCard1.cardNumber} and ${selectedCard2.cardNumber} don't match.`);
-        isLockedBoard = true;
-        // flip cards facedown
-        setTimeout(() => {
-            selectedCard1.style.display = "block";
-            selectedCard2.style.display = "block";
-            selectedCard1.nextElementSibling.style.display = "none";
-            selectedCard2.nextElementSibling.style.display = "none";
-            selectedCard1 = null;
-            selectedCard2 = null;
-            isLockedBoard = false;
-        }, 1000);
-    }
-
+    checkCards();
 
     isWin = checkWinCondition();
     if (isWin) {
         // TODO: change alert to win message
         alert("You won!");
-        // TODO: disable click listener from 2 remaining cards. maybe show them too?
+        // TODO: disable click listener from 2 remaining cards. maybe show them too? maybe just clear the board
     }
 }
 
 function checkWinCondition() {
     // win early if only 2 cards remain
     return (cardMatchCount < halfGridSize - 1) ? false : true;
-}
-
-function resetGame() {
-    // reset globals and grid
-    selectedCard1 = null;
-    selectedCard2 = null;
-    cardMatchCount = 0;
-    halfGridSize = 0;
-    isWin = false;
-    isLockedBoard = false;
-
-    moveCount = 0;
-    moveCountSpan.textContent = moveCount;
-
-    grid.innerHTML = null;
 }
