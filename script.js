@@ -196,9 +196,9 @@ function flipCard(e) {
 
     isWin = checkWinCondition();
     if (isWin) {
-        // TODO: change alert to win message
-        alert("You won!");
-        // TODO: disable click listener from 2 remaining cards. maybe show them too? maybe just clear the board
+        const moveCounter = moveCount;
+        resetGame();
+        grid.textContent = `YOU WIN! It took you ${moveCounter} moves.`;
     }
 }
 
