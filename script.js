@@ -205,3 +205,36 @@ function checkWinCondition() {
     // win early if only 2 cards remain
     return (cardMatchCount < halfGridSize - 1) ? false : true;
 }
+
+// timer logic modified from:
+// https://www.w3schools.com/howto/howto_js_countdown.asp
+// set date we're counting down to
+// get current date/time
+let countDownDate = new Date();
+// add min & sec to it
+// TODO: implement time entry/selection for custom countdown
+countDownDate.setMinutes(countDownDate.getMinutes() + 5);
+countDownDate.setSeconds(countDownDate.getSeconds() + 10);
+
+let intervalId = setInterval(function () {
+    const timer = document.getElementById("timer");
+    // get today's date and time
+    let now = new Date();
+    // find distance between now and countdown date
+    let distance = countDownDate - now;
+    let distDate = new Date(distance);
+    // get minutes, seconds, milliseconds
+    let minutes = distDate.getMinutes();
+    let seconds = distDate.getSeconds();
+    let ms = distDate.getMilliseconds();
+    // add leading zeros & display
+    minutes = minutes.toString().padStart(2, "0");
+    seconds = seconds.toString().padStart(2, "0");
+    ms = ms.toString().padStart(3, "0");
+    timer.innerHTML = `${minutes}:${seconds}:${ms}`;
+    // countdown finished
+    if (distance < 0) {
+        clearInterval(intervalId);
+        timer.innerHTML = "EXPIRED";
+    }
+}, 50);
