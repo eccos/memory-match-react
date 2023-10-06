@@ -222,16 +222,7 @@ let countdownIntervalId = setInterval(() => {
     let now = new Date();
     // find distance between now and countdown date
     let distance = countdownDate - now;
-    let distDate = new Date(distance);
-    // get minutes, seconds, milliseconds
-    let minutes = distDate.getMinutes();
-    let seconds = distDate.getSeconds();
-    let ms = distDate.getMilliseconds();
-    // add leading zeros & display
-    minutes = minutes.toString().padStart(2, "0");
-    seconds = seconds.toString().padStart(2, "0");
-    ms = ms.toString().padStart(3, "0");
-    timer.innerHTML = `${minutes}:${seconds}:${ms}`;
+    displayTimer(distance, timer);
     // countdown finished
     if (distance < 0) {
         clearInterval(countdownIntervalId);
@@ -245,7 +236,11 @@ let msCount = 0;
 let timerIntervalId = setInterval(() => {
     const timer = document.getElementById("timer");
     msCount += msDelay;
-    let msDate = new Date(msCount);
+    displayTimer(msCount, timer);
+}, msDelay);
+
+function displayTimer(milliseconds, element) {
+    let msDate = new Date(milliseconds);
     // get minutes, seconds, milliseconds
     let minutes = msDate.getMinutes();
     let seconds = msDate.getSeconds();
@@ -254,5 +249,5 @@ let timerIntervalId = setInterval(() => {
     minutes = minutes.toString().padStart(2, "0");
     seconds = seconds.toString().padStart(2, "0");
     ms = ms.toString().padStart(3, "0");
-    timer.innerHTML = `${minutes}:${seconds}:${ms}`;
-}, msDelay);
+    element.innerHTML = `${minutes}:${seconds}:${ms}`;
+}
