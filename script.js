@@ -18,6 +18,21 @@ const grid = document.querySelector("#card-grid");
 
 startBtn.addEventListener("click", startGame);
 
+function startGame() {
+    resetGame();
+    const [x, y] = selectGrid.value.split("x");
+    halfGridSize = (x * y) / 2;
+    const gridRows = createCustomGrid(x, y);
+    gridRows.forEach(row => {
+        grid.appendChild(row);
+    });
+    // TODO: implement time entry/selection for custom countdown
+    // TODO: stop timers/clearIntervals for existing intervalIds
+    // TODO: implement lose conditions/challenges for timers
+    startCountdown();
+    startTimer();
+}
+
 function resetGame() {
     selectedCard1 = null;
     selectedCard2 = null;
@@ -27,19 +42,9 @@ function resetGame() {
     isLockedBoard = false;
 
     moveCount = 0;
-    moveCountSpan.textContent = moveCount;
+    moveCountSpan.textContent = `Moves: ${moveCount}`;
 
     grid.innerHTML = null;
-}
-
-function startGame() {
-    resetGame();
-    const [x, y] = selectGrid.value.split("x");
-    halfGridSize = (x * y) / 2;
-    const gridRows = createCustomGrid(x, y);
-    gridRows.forEach(row => {
-        grid.appendChild(row);
-    });
 }
 
 function createUniqueCards(gridSize) {
@@ -190,7 +195,7 @@ function flipCard(e) {
     selectedCard2 = self;
 
     moveCount++;
-    moveCountSpan.textContent = moveCount;
+    moveCountSpan.textContent = `Moves: ${moveCount}`;
 
     checkCards();
 
@@ -206,41 +211,44 @@ function checkWinCondition() {
     return (cardMatchCount < halfGridSize - 1) ? false : true;
 }
 
-// timer logic modified from:
-// https://www.w3schools.com/howto/howto_js_countdown.asp
-// set date we're counting down to
-// get current date/time
-let countdownDate = new Date();
-// add min & sec to it
-// TODO: implement time entry/selection for custom countdown
-countdownDate.setMinutes(countdownDate.getMinutes() + 5);
-countdownDate.setSeconds(countdownDate.getSeconds() + 10);
+const msDelay = 33;
 
-let countdownIntervalId = setInterval(() => {
-    const timer = document.getElementById("countdown-timer");
-    // get today's date and time
-    let now = new Date();
-    // find distance between now and countdown date
-    let distance = countdownDate - now;
-    displayTimer(distance, timer);
-    // countdown finished
-    if (distance < 0) {
-        clearInterval(countdownIntervalId);
-        timer.innerHTML = "EXPIRED";
-    }
-}, 33);
+function startCountdown() {
+    // timer logic modified from:
+    // https://www.w3schools.com/howto/howto_js_countdown.asp
+    // set date to countdown to
+    // get current date/time
+    const countdownDate = new Date();
+    // add min & sec to it
+    countdownDate.setMinutes(countdownDate.getMinutes() + 5);
+    countdownDate.setSeconds(countdownDate.getSeconds() + 10);
 
-let zeroDate = new Date(0);
-let msDelay = 33;
-let msCount = 0;
-let timerIntervalId = setInterval(() => {
-    const timer = document.getElementById("timer");
-    msCount += msDelay;
-    displayTimer(msCount, timer);
-}, msDelay);
+    const countdownIntervalId = setInterval(() => {
+        const timer = document.getElementById("countdown-timer");
+        // get today's date and time
+        let now = new Date();
+        // find distance between now and countdown date
+        let distance = countdownDate - now;
+        displayTimer(distance, timer);
+        // countdown finished
+        if (distance < 0) {
+            clearInterval(countdownIntervalId);
+            timer.innerHTML = "EXPIRED";
+        }
+    }, msDelay);
+}
+
+function startTimer() {
+    let msCount = 0;
+    const timerIntervalId = setInterval(() => {
+        const timer = document.getElementById("timer");
+        msCount += msDelay;
+        displayTimer(msCount, timer);
+    }, msDelay);
+}
 
 function displayTimer(milliseconds, element) {
-    let msDate = new Date(milliseconds);
+    const msDate = new Date(milliseconds);
     // get minutes, seconds, milliseconds
     let minutes = msDate.getMinutes();
     let seconds = msDate.getSeconds();
