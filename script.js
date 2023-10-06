@@ -13,14 +13,16 @@ let timerIntervalId = null;
 let moveCount = 0;
 const moveCountSpan = document.querySelector("#move-count");
 
-/**
- * @type {HTMLSelectElement}
- */
 const selectGrid = document.querySelector("#select-grid-size");
 const startBtn = document.querySelector("#start");
 const grid = document.querySelector("#card-grid");
-
 startBtn.addEventListener("click", startGame);
+
+const btnOptions = document.getElementById("btn-options");
+const optionsPanel = document.getElementById("options-panel");
+btnOptions.addEventListener("click", () => {
+    optionsPanel.classList.toggle("hide");
+})
 
 function startGame() {
     resetGame();
