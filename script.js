@@ -1,9 +1,8 @@
 
-let selectedCard1 = null;
-let selectedCard2 = null;
+let card1 = null;
+let card2 = null;
 let cardMatchCount = 0;
 let halfGridSize = 0;
-let isWin = false;
 let isLockedBoard = false;
 // TODO: implement time entry/selection for custom countdown
 // TODO: implement lose conditions/challenges for timers
@@ -13,35 +12,34 @@ let timerIntervalId = null;
 let moveCount = 0;
 const moveCountSpan = document.querySelector("#move-count");
 
-const selectGrid = document.querySelector("#select-grid-size");
-const startBtn = document.querySelector("#start");
-const grid = document.querySelector("#card-grid");
-startBtn.addEventListener("click", startGame);
+const selectGridSize = document.querySelector("#select-grid-size");
+const btnStartGame = document.querySelector("#btn-start-game");
+const cardGrid = document.querySelector("#card-grid");
+btnStartGame.addEventListener("click", startGame);
 
 const btnOptions = document.getElementById("btn-options");
 const optionsPanel = document.getElementById("options-panel");
 btnOptions.addEventListener("click", () => {
     optionsPanel.classList.toggle("hide");
-})
+});
 
 function startGame() {
     resetGame();
-    const [x, y] = selectGrid.value.split("x");
+    const [x, y] = selectGridSize.value.split("x");
     halfGridSize = (x * y) / 2;
     const gridRows = createCustomGrid(x, y);
     gridRows.forEach(row => {
-        grid.appendChild(row);
+        cardGrid.appendChild(row);
     });
     countdownIntervalId = startCountdown();
     timerIntervalId = startTimer();
 }
 
 function resetGame() {
-    selectedCard1 = null;
-    selectedCard2 = null;
+    card1 = null;
+    card2 = null;
     cardMatchCount = 0;
     halfGridSize = 0;
-    isWin = false;
     isLockedBoard = false;
 
     moveCount = 0;
@@ -49,7 +47,7 @@ function resetGame() {
 
     stopTimers();
 
-    grid.innerHTML = null;
+    cardGrid.innerHTML = null;
 }
 
 function createUniqueCards(gridSize) {
@@ -166,22 +164,22 @@ function showCard(card) {
 }
 
 function hideCards() {
-    selectedCard1.style.display = "block";
-    selectedCard2.style.display = "block";
-    selectedCard1.nextElementSibling.style.display = "none";
-    selectedCard2.nextElementSibling.style.display = "none";
-    selectedCard1 = null;
-    selectedCard2 = null;
+    card1.style.display = "block";
+    card2.style.display = "block";
+    card1.nextElementSibling.style.display = "none";
+    card2.nextElementSibling.style.display = "none";
+    card1 = null;
+    card2 = null;
     isLockedBoard = false;
 }
 
 function checkCards() {
-    if (selectedCard1.cardNumber === selectedCard2.cardNumber) {
-        selectedCard1.nextElementSibling.style.border = "1px solid black";
-        selectedCard2.nextElementSibling.style.border = "1px solid black";
+    if (card1.cardNumber === card2.cardNumber) {
+        card1.nextElementSibling.style.border = "1px solid black";
+        card2.nextElementSibling.style.border = "1px solid black";
         cardMatchCount++;
-        selectedCard1 = null;
-        selectedCard2 = null;
+        card1 = null;
+        card2 = null;
     } else {
         isLockedBoard = true;
         setTimeout(hideCards, 1000);
@@ -193,11 +191,11 @@ function flipCard(e) {
     const self = e.currentTarget;
     showCard(self);
 
-    if (!selectedCard1) {
-        selectedCard1 = self;
+    if (!card1) {
+        card1 = self;
         return;
     }
-    selectedCard2 = self;
+    card2 = self;
 
     moveCount++;
     moveCountSpan.textContent = `Moves: ${moveCount}`;
@@ -212,8 +210,8 @@ function checkWinCondition() {
     }
     // win early if only 2 cards remain
     stopTimers();
-    grid.innerHTML = null;
-    grid.textContent = `YOU WIN! It took you ${moveCount} moves.`;
+    cardGrid.innerHTML = null;
+    cardGrid.textContent = `YOU WIN! It took you ${moveCount} moves.`;
     return true;
 }
 
