@@ -201,18 +201,18 @@ function flipCard(e) {
     moveCountSpan.textContent = `Moves: ${moveCount}`;
 
     checkCards();
-
-    isWin = checkWinCondition();
-    if (isWin) {
-        stopTimers();
-        grid.innerHTML = null;
-        grid.textContent = `YOU WIN! It took you ${moveCount} moves.`;
-    }
+    checkWinCondition();
 }
 
 function checkWinCondition() {
+    if (cardMatchCount < halfGridSize - 1) {
+        return false;
+    }
     // win early if only 2 cards remain
-    return (cardMatchCount < halfGridSize - 1) ? false : true;
+    stopTimers();
+    grid.innerHTML = null;
+    grid.textContent = `YOU WIN! It took you ${moveCount} moves.`;
+    return true;
 }
 
 const msDelay = 33;
