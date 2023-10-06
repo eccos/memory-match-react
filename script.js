@@ -5,6 +5,10 @@ let cardMatchCount = 0;
 let halfGridSize = 0;
 let isWin = false;
 let isLockedBoard = false;
+// TODO: implement time entry/selection for custom countdown
+// TODO: implement lose conditions/challenges for timers
+let countdownIntervalId = null;
+let timerIntervalId = null;
 
 let moveCount = 0;
 const moveCountSpan = document.querySelector("#move-count");
@@ -26,11 +30,8 @@ function startGame() {
     gridRows.forEach(row => {
         grid.appendChild(row);
     });
-    // TODO: implement time entry/selection for custom countdown
-    // TODO: stop timers/clearIntervals for existing intervalIds
-    // TODO: implement lose conditions/challenges for timers
-    startCountdown();
-    startTimer();
+    countdownIntervalId = startCountdown();
+    timerIntervalId = startTimer();
 }
 
 function resetGame() {
@@ -43,6 +44,8 @@ function resetGame() {
 
     moveCount = 0;
     moveCountSpan.textContent = `Moves: ${moveCount}`;
+
+    stopTimers();
 
     grid.innerHTML = null;
 }
@@ -201,6 +204,7 @@ function flipCard(e) {
 
     isWin = checkWinCondition();
     if (isWin) {
+        stopTimers();
         grid.innerHTML = null;
         grid.textContent = `YOU WIN! It took you ${moveCount} moves.`;
     }
@@ -236,6 +240,8 @@ function startCountdown() {
             timer.innerHTML = "EXPIRED";
         }
     }, msDelay);
+
+    return countdownIntervalId;
 }
 
 function startTimer() {
@@ -245,6 +251,8 @@ function startTimer() {
         msCount += msDelay;
         displayTimer(msCount, timer);
     }, msDelay);
+
+    return timerIntervalId;
 }
 
 function displayTimer(milliseconds, element) {
@@ -258,4 +266,13 @@ function displayTimer(milliseconds, element) {
     seconds = seconds.toString().padStart(2, "0");
     ms = ms.toString().padStart(3, "0");
     element.innerHTML = `${minutes}:${seconds}:${ms}`;
+}
+
+function stopTimers() {
+    if (countdownIntervalId) {
+        clearInterval(countdownIntervalId);
+    }
+    if (timerIntervalId) {
+        clearInterval(timerIntervalId);
+    }
 }
