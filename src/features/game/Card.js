@@ -4,14 +4,29 @@ import { useState } from "react";
 const Card = ({ id, value }) => {
   const [isFaceup, setIsFaceup] = useState(false);
 
-  function handleClick() {
+  function handleClick(e) {
     setIsFaceup(true);
   }
 
-  // function showCard(card) {
-  //   card.style.display = "none";
-  //   card.nextElementSibling.style.display = "block";
-  //   card.nextElementSibling.style.border = "1px solid blue";
+  return isFaceup ? (
+    <div alt="faceup card" className="faceup-card selected-card" id={id}>
+      {value}
+    </div>
+  ) : (
+    <img
+      src={CardBack}
+      className="img-fluid facedown-card"
+      alt="facedown card"
+      id={id}
+      onClick={handleClick}
+    />
+  );
+
+  // function createDomFaceupCard(id, value) {
+  //   // <div style="display: none;" id="card-1" alt="faceup card">
+  // }
+  // function createDomFacedownCard(id, value) {
+  //   // <img src="card-back.png" class="img-fluid" id="card-1" alt="facedown card">
   // }
 
   // function flipCard(e) {
@@ -32,46 +47,13 @@ const Card = ({ id, value }) => {
   //   checkWinCondition();
   // }
 
-  // function createDomFacedownCard(id, value) {
-  //   // <img src="card-back.png" class="img-fluid" id="card-1" alt="facedown card">
-  //   // const elem = document.createElement("img");
-  //   elem.src = "card-back.png";
-  //   elem.className = "img-fluid";
-  //   elem.alt = "facedown card";
-  //   elem.id = id;
-  //   elem.cardNumber = value;
-  //   elem.onclick = flipCard;
-  //   elem.style.display = "block";
-  //   elem.style.margin = "auto";
-  //   return elem;
+  // function showCard(card) {
+  //   card.style.display = "none";
+  //
+  //   moved to App.css as .selected-card
+  //   card.nextElementSibling.style.display = "block";
+  //   card.nextElementSibling.style.border = "1px solid blue";
   // }
-
-  // function createDomFaceupCard(id, value) {
-  //   // <div style="display: none;" id="card-1" alt="faceup card">
-  //   const elem = document.createElement("div");
-  //   elem.alt = "faceup card";
-  //   elem.id = id;
-  //   elem.textContent = value;
-  //   elem.style.display = "none";
-  //   elem.style.border = "1px solid black";
-  //   elem.style.fontSize = "8em";
-  //   elem.style.textAlign = "center";
-  //   return elem;
-  // }
-
-  return isFaceup ? (
-    <div alt="faceup card" id={id}>
-      {value}
-    </div>
-  ) : (
-    <img
-      src={CardBack}
-      className="img-fluid"
-      alt="facedown card"
-      id={id}
-      onClick={handleClick}
-    />
-  );
 };
 
 export default Card;

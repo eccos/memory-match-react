@@ -1,22 +1,34 @@
 import Card from "./Card";
 import { Row, Col } from "reactstrap";
+import { useState } from "react";
 
 const CardsList = () => {
-  // function createUniqueCards(gridSize) {
-  //   const halfGrid = gridSize / 2;
-  //   const uniqueCards = [];
-  //   for (let i = 0; i < halfGrid; i++) {
-  //     uniqueCards.push(i + 1);
-  //   }
-  //   return uniqueCards;
-  // }
+  const rows = 2;
+  const cols = 3;
+  const gridSize = rows * cols;
+  const halfGrid = gridSize / 2;
 
-  // function createDomRow() {
-  //   // <div class="row">
-  //   const elem = document.createElement("div");
-  //   elem.className = "row";
-  //   return elem;
-  // }
+  const [cards, setCards] = useState(createUniqueCards(gridSize));
+  const { id, value } = { id: 1, value: 1 };
+
+  return Array.from({ length: rows }, (_, rowIndex) => (
+    <Row key={rowIndex}>
+      {Array.from({ length: cols }, (_, colIndex) => (
+        <Col key={colIndex} id={`card-${rowIndex * cols + colIndex + 1}`}>
+          <Card id={id} value={value} />
+        </Col>
+      ))}
+    </Row>
+  ));
+
+  function createUniqueCards(gridSize) {
+    const halfGrid = gridSize / 2;
+    const uniqueCards = [];
+    for (let i = 0; i < halfGrid; i++) {
+      uniqueCards.push(i + 1);
+    }
+    return uniqueCards;
+  }
 
   // function createDomCol() {
   //   // <div class="col">
@@ -66,12 +78,6 @@ const CardsList = () => {
   //   }
   //   return rows;
   // }
-
-  return (
-    <Row>
-      <Card id={id} value={value} />
-    </Row>
-  );
 };
 
 export default CardsList;
