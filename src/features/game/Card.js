@@ -1,25 +1,45 @@
 import CardBack from "../../assets/img/card-back.png";
 import { useState } from "react";
+import ReactCardFlip from "react-card-flip";
 
 const Card = ({ id, value }) => {
   const [isFaceup, setIsFaceup] = useState(false);
 
   function handleClick(e) {
-    setIsFaceup(true);
+    setIsFaceup(!isFaceup);
   }
 
-  return isFaceup ? (
-    <div alt="faceup card" className="faceup-card selected-card" id={id}>
-      {value}
-    </div>
-  ) : (
-    <img
-      src={CardBack}
-      className="img-fluid facedown-card"
-      alt="facedown card"
-      id={id}
-      onClick={handleClick}
-    />
+  return (
+    <ReactCardFlip isFlipped={isFaceup} flipDirection="horizontal">
+      <img
+        src={CardBack}
+        className="img-fluid facedown-card"
+        alt="facedown card"
+        id={id}
+        onClick={handleClick}
+      />
+      <div
+        alt="faceup card"
+        className="faceup-card selected-card"
+        id={id}
+        onClick={handleClick}
+      >
+        {value}
+      </div>
+    </ReactCardFlip>
+    // isFaceup ? (
+    // <div alt="faceup card" className="faceup-card selected-card" id={id}>
+    //   {value}
+    // </div>
+    // ) : (
+    // <img
+    //   src={CardBack}
+    //   className="img-fluid facedown-card"
+    //   alt="facedown card"
+    //   id={id}
+    //   onClick={handleClick}
+    // />
+    // );
   );
 
   // function createDomFaceupCard(id, value) {
@@ -45,14 +65,6 @@ const Card = ({ id, value }) => {
 
   //   checkCards();
   //   checkWinCondition();
-  // }
-
-  // function showCard(card) {
-  //   card.style.display = "none";
-  //
-  //   moved to App.css as .selected-card
-  //   card.nextElementSibling.style.display = "block";
-  //   card.nextElementSibling.style.border = "1px solid blue";
   // }
 };
 
