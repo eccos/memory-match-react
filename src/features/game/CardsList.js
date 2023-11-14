@@ -1,47 +1,47 @@
 import Card from "./Card";
-import { Container } from "reactstrap";
+import { Container, Button } from "reactstrap";
 import { useEffect, useState } from "react";
 
-  // function createCustomGrid(rowCardLen, colCardLen) {
-  //   const gridSize = rowCardLen * colCardLen;
-  //   const rowCardLimit = 12;
-  //   const colCardLimit = 6;
-  //   if (rowCardLen > rowCardLimit) {
-  //     console.error(`Row can only have ${rowCardLimit} cards max`);
-  //     return;
-  //   }
-  //   if (colCardLen > colCardLimit) {
-  //     console.error(`Column can only have ${colCardLimit} cards max`);
-  //     return;
-  //   }
-  //   if (gridSize % 2 !== 0) {
-  //     console.error("Grid cannot have an odd number of cards");
-  //     return;
-  //   }
-  //   const uniqueCards = createUniqueCards(gridSize);
-  //   const pairCards = uniqueCards.concat(uniqueCards);
-  //   const cards = shuffle(pairCards);
+// function createCustomGrid(rowCardLen, colCardLen) {
+//   const gridSize = rowCardLen * colCardLen;
+//   const rowCardLimit = 12;
+//   const colCardLimit = 6;
+//   if (rowCardLen > rowCardLimit) {
+//     console.error(`Row can only have ${rowCardLimit} cards max`);
+//     return;
+//   }
+//   if (colCardLen > colCardLimit) {
+//     console.error(`Column can only have ${colCardLimit} cards max`);
+//     return;
+//   }
+//   if (gridSize % 2 !== 0) {
+//     console.error("Grid cannot have an odd number of cards");
+//     return;
+//   }
+//   const uniqueCards = createUniqueCards(gridSize);
+//   const pairCards = uniqueCards.concat(uniqueCards);
+//   const cards = shuffle(pairCards);
 
-  //   const rows = [];
-  //   let cardIndex = 0;
-  //   for (let row = 0; row < colCardLen; row++) {
-  //     // create html row
-  //     const row = createDomRow();
-  //     for (let col = 0; col < rowCardLen; col++) {
-  //       // create html col & create/append card
-  //       const col = createDomCol();
-  //       const cardId = "card-" + (cardIndex + 1);
-  //       const card = createDomFacedownCard(cardId, cards[cardIndex]);
-  //       const faceupCard = createDomFaceupCard(cardId, cards[cardIndex]);
-  //       cardIndex++;
-  //       col.appendChild(card);
-  //       col.appendChild(faceupCard);
-  //       row.appendChild(col);
-  //     }
-  //     rows.push(row);
-  //   }
-  //   return rows;
-  // }
+//   const rows = [];
+//   let cardIndex = 0;
+//   for (let row = 0; row < colCardLen; row++) {
+//     // create html row
+//     const row = createDomRow();
+//     for (let col = 0; col < rowCardLen; col++) {
+//       // create html col & create/append card
+//       const col = createDomCol();
+//       const cardId = "card-" + (cardIndex + 1);
+//       const card = createDomFacedownCard(cardId, cards[cardIndex]);
+//       const faceupCard = createDomFaceupCard(cardId, cards[cardIndex]);
+//       cardIndex++;
+//       col.appendChild(card);
+//       col.appendChild(faceupCard);
+//       row.appendChild(col);
+//     }
+//     rows.push(row);
+//   }
+//   return rows;
+// }
 
 const rowCount = 2;
 const colCount = 3;
@@ -144,9 +144,20 @@ const CardsList = () => {
 
   return (
     <Container>
-      <button onClick={startGame}>New Game</button>
+      <h1>Memory Match</h1>
+      <p>
+        Cards are facedown in a grid pattern. Select 2 cards to flip them
+        faceup. If they match, they are removed from play, else they are flipped
+        facedown again.
+        <br />
+        <strong>Goal:</strong> <em>Remove all cards from play.</em>
+      </p>
+      <p>Select a Grid Size and hit Start to play!</p>
+      <Button color="primary" onClick={startGame}>
+        New Game
+      </Button>
       {cards.length > 0 && <p>Turn: {turns}</p>}
-      {!cards.find((card) => !card.matched) && (
+      {cards.length > 0 && !cards.find((card) => !card.matched) && (
         <p>YOU WIN! It took you {turns} moves.</p>
       )}
       <div className="card-grid">
