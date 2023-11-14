@@ -64,25 +64,15 @@ const CardsList = () => {
       // cardMatchCount++;
     } else {
       // isLockedBoard = true;
-      // setTimeout(hideCards, 1000);
+      setTimeout(hideCards, 1000);
     }
   }
 
-  function resetTurn() {
+  function hideCards() {
     setChoice1(null);
     setChoice2(null);
-    setTurns((prevTurns) => prevTurns + 1);
+    // isLockedBoard = false;
   }
-
-  // function hideCards() {
-  //   card1.style.display = "block";
-  //   card2.style.display = "block";
-  //   card1.nextElementSibling.style.display = "none";
-  //   card2.nextElementSibling.style.display = "none";
-  //   card1 = null;
-  //   card2 = null;
-  //   isLockedBoard = false;
-  // }
 
   // function checkWinCondition() {
   //   if (cardMatchCount < halfGridSize - 1) {
@@ -131,7 +121,7 @@ const CardsList = () => {
   useEffect(() => {
     if (!choice2) return;
     checkCards();
-    resetTurn();
+    setTurns((prevTurns) => prevTurns + 1);
     // checkWinCondition();
   }, [choice2]);
 
@@ -143,7 +133,12 @@ const CardsList = () => {
 
       <div className="card-grid">
         {cards.map((card) => (
-          <Card key={card.id} card={card} onCardClick={handleClick} />
+          <Card
+            key={card.id}
+            card={card}
+            onCardClick={handleClick}
+            isFaceup={card.matched || [choice1, choice2].includes(card)}
+          />
         ))}
       </div>
     </Container>

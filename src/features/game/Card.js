@@ -2,12 +2,10 @@ import CardBack from "../../assets/img/card-back.png";
 import { useState } from "react";
 import ReactCardFlip from "react-card-flip";
 
-const Card = ({ card, onCardClick }) => {
+const Card = ({ card, onCardClick, isFaceup }) => {
   const { value } = card;
-  const [isFaceup, setIsFaceup] = useState(false);
 
   function handleClick() {
-    setIsFaceup(!isFaceup);
     onCardClick(card);
   }
 
