@@ -1,6 +1,6 @@
 import Card from "./Card";
-import { Row, Col, Container } from "reactstrap";
-import { useState } from "react";
+import { Container } from "reactstrap";
+import { useEffect, useState } from "react";
 
 const rowCount = 2;
 const colCount = 3;
@@ -11,7 +11,7 @@ function createUniqueCards(gridSize) {
   const halfGrid = gridSize / 2;
   const uniqueCards = [];
   for (let i = 0; i < halfGrid; i++) {
-    uniqueCards.push({ value: i + 1 });
+    uniqueCards.push({ value: i + 1, matched: false });
   }
   return [...uniqueCards, ...uniqueCards];
 }
@@ -39,7 +39,7 @@ const CardsList = () => {
   const [choice2, setChoice2] = useState(null);
   const [openCards, setOpenCards] = useState([]);
   const [matchedCards, setMatchedCards] = useState([]);
-  const [moves, setMoves] = useState(0);
+  const [turns, setTurns] = useState(0);
 
   const startGame = () => {
     const shuffledCards = shuffle(cardData).map((card, idx) => ({
@@ -47,18 +47,31 @@ const CardsList = () => {
       id: idx,
     }));
     setCards(shuffledCards);
-    setMoves(0);
+    setTurns(0);
   };
 
   function checkCards() {
-    if (choice1 === choice2) {
+    console.log(`Comparing: ${choice1.value} vs ${choice2.value}`);
+    if (choice1.value === choice2.value) {
+      setCards((prevCards) => {
+        return prevCards.map((card) => {
+          if (card.value === choice1.value) {
+            return { ...card, matched: true };
+          }
+          return card;
+        });
+      });
       // cardMatchCount++;
-      // card1 = null;
-      // card2 = null;
     } else {
       // isLockedBoard = true;
       // setTimeout(hideCards, 1000);
     }
+  }
+
+  function resetTurn() {
+    setChoice1(null);
+    setChoice2(null);
+    setTurns((prevTurns) => prevTurns + 1);
   }
 
   // function hideCards() {
@@ -111,15 +124,18 @@ const CardsList = () => {
 
   function handleClick(card) {
     // if (isLockedBoard) return;
-
     !choice1 ? setChoice1(card) : setChoice2(card);
-
-    // moveCount++;
-    // moveCountSpan.textContent = `Moves: ${moveCount}`;
-
-    checkCards();
-    // checkWinCondition();
   }
+
+  // compare selected cards
+  useEffect(() => {
+    if (!choice2) return;
+    checkCards();
+    resetTurn();
+    // checkWinCondition();
+  }, [choice2]);
+
+  console.table(cards);
 
   return (
     <Container>
@@ -130,24 +146,6 @@ const CardsList = () => {
           <Card key={card.id} card={card} onCardClick={handleClick} />
         ))}
       </div>
-      {/* {Array.from({ length: rowCount }, (_, rowIdx) => {
-        return (
-          <Row key={rowIdx}>
-            {Array.from({ length: colCount }, (_, colIdx) => {
-              let cardIdx = rowIdx * colCount + colIdx;
-              return (
-                <Col key={colIdx} id={`card-${cardIdx + 1}`}>
-                  <Card
-                    id={cardIdx}
-                    value={cards[cardIdx]}
-                    onCardClick={handleClick}
-                  />
-                </Col>
-              );
-            })}
-          </Row>
-        );
-      })} */}
     </Container>
   );
 
