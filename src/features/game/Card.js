@@ -27,19 +27,6 @@ const Card = ({ id, value }) => {
         {value}
       </div>
     </ReactCardFlip>
-    // isFaceup ? (
-    // <div alt="faceup card" className="faceup-card selected-card" id={id}>
-    //   {value}
-    // </div>
-    // ) : (
-    // <img
-    //   src={CardBack}
-    //   className="img-fluid facedown-card"
-    //   alt="facedown card"
-    //   id={id}
-    //   onClick={handleClick}
-    // />
-    // );
   );
 
   // function createDomFaceupCard(id, value) {
