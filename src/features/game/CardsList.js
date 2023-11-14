@@ -3,23 +3,26 @@ import { Row, Col } from "reactstrap";
 import { useState } from "react";
 
 const CardsList = () => {
-  const rows = 2;
-  const cols = 3;
-  const gridSize = rows * cols;
-  const halfGrid = gridSize / 2;
+  const rowCount = 2;
+  const colCount = 3;
+  const gridSize = rowCount * colCount;
 
   const [cards, setCards] = useState(createUniqueCards(gridSize));
-  const { id, value } = { id: 1, value: 1 };
 
-  return Array.from({ length: rows }, (_, rowIndex) => (
-    <Row key={rowIndex}>
-      {Array.from({ length: cols }, (_, colIndex) => (
-        <Col key={colIndex} id={`card-${rowIndex * cols + colIndex + 1}`}>
-          <Card id={id} value={value} />
-        </Col>
-      ))}
-    </Row>
-  ));
+  return Array.from({ length: rowCount }, (_, rowIdx) => {
+    return (
+      <Row key={rowIdx}>
+        {Array.from({ length: colCount }, (_, colIdx) => {
+          let cardIdx = rowIdx * colCount + colIdx;
+          return (
+            <Col key={colIdx} id={`card-${cardIdx + 1}`}>
+              <Card id={cardIdx} value={cards[cardIdx]} />
+            </Col>
+          );
+        })}
+      </Row>
+    );
+  });
 
   function createUniqueCards(gridSize) {
     const halfGrid = gridSize / 2;
@@ -27,16 +30,27 @@ const CardsList = () => {
     for (let i = 0; i < halfGrid; i++) {
       uniqueCards.push(i + 1);
     }
-    return uniqueCards;
+    const pairCards = uniqueCards.concat(uniqueCards);
+    const cards = shuffle(pairCards);
+    return cards;
   }
 
-  // function createDomCol() {
-  //   // <div class="col">
-  //   const elem = document.createElement("div");
-  //   elem.className = "col";
-  //   elem.style.margin = "auto";
-  //   return elem;
-  // }
+  function shuffle(array) {
+    let currentIndex = array.length;
+    let randomIndex;
+    // While there remain elements to shuffle.
+    while (currentIndex > 0) {
+      // Pick a remaining element.
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+      // And swap it with the current element.
+      [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex],
+        array[currentIndex],
+      ];
+    }
+    return array;
+  }
 
   // function createCustomGrid(rowCardLen, colCardLen) {
   //   const gridSize = rowCardLen * colCardLen;
