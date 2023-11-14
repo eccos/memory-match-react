@@ -37,53 +37,20 @@ const CardsList = () => {
   const [cards, setCards] = useState([]);
   const [choice1, setChoice1] = useState(null);
   const [choice2, setChoice2] = useState(null);
-  const [openCards, setOpenCards] = useState([]);
-  const [matchedCards, setMatchedCards] = useState([]);
   const [turns, setTurns] = useState(0);
+  const [isLockedBoard, setIsLockedBoard] = useState(false);
 
-  const startGame = () => {
+  function startGame() {
     const shuffledCards = shuffle(cardData).map((card, idx) => ({
       ...card,
       id: idx,
     }));
     setCards(shuffledCards);
-    setTurns(0);
-  };
-
-  function checkCards() {
-    console.log(`Comparing: ${choice1.value} vs ${choice2.value}`);
-    if (choice1.value === choice2.value) {
-      setCards((prevCards) => {
-        return prevCards.map((card) => {
-          if (card.value === choice1.value) {
-            return { ...card, matched: true };
-          }
-          return card;
-        });
-      });
-      // cardMatchCount++;
-    } else {
-      // isLockedBoard = true;
-      setTimeout(hideCards, 1000);
-    }
-  }
-
-  function hideCards() {
     setChoice1(null);
     setChoice2(null);
-    // isLockedBoard = false;
+    setTurns(0);
+    setIsLockedBoard(false);
   }
-
-  // function checkWinCondition() {
-  //   if (cardMatchCount < halfGridSize - 1) {
-  //     return false;
-  //   }
-  //   // win early if only 2 cards remain
-  //   stopTimers();
-  //   cardGrid.innerHTML = null;
-  //   cardGrid.textContent = `YOU WIN! It took you ${moveCount} moves.`;
-  //   return true;
-  // }
 
   // function startGame() {
   //   resetGame();
@@ -112,8 +79,42 @@ const CardsList = () => {
   //   cardGrid.innerHTML = null;
   // }
 
+  function checkCards() {
+    setIsLockedBoard(true);
+    if (choice1.value === choice2.value) {
+      setCards((prevCards) => {
+        return prevCards.map((card) => {
+          if (card.value === choice1.value) {
+            return { ...card, matched: true };
+          }
+          return card;
+        });
+      });
+      resetChoices();
+    } else {
+      setTimeout(resetChoices, 1000);
+    }
+  }
+
+  function resetChoices() {
+    setChoice1(null);
+    setChoice2(null);
+    setIsLockedBoard(false);
+  }
+
+  // function checkWinCondition() {
+  //   if (cardMatchCount < halfGridSize - 1) {
+  //     return false;
+  //   }
+  //   // win early if only 2 cards remain
+  //   stopTimers();
+  //   cardGrid.innerHTML = null;
+  //   cardGrid.textContent = `YOU WIN! It took you ${moveCount} moves.`;
+  //   return true;
+  // }
+
   function handleClick(card) {
-    // if (isLockedBoard) return;
+    if (isLockedBoard) return;
     !choice1 ? setChoice1(card) : setChoice2(card);
   }
 
