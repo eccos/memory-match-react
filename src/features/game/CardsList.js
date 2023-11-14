@@ -152,13 +152,12 @@ const CardsList = () => {
         <br />
         <strong>Goal:</strong> <em>Remove all cards from play.</em>
       </p>
-      <p>Select a Grid Size and hit Start to play!</p>
       <Button color="primary" onClick={startGame}>
         New Game
       </Button>
       {cards.length > 0 && <p>Turn: {turns}</p>}
       {cards.length > 0 && !cards.find((card) => !card.matched) && (
-        <p>YOU WIN! It took you {turns} moves.</p>
+        <p>YOU WIN! It took you {turns} turns.</p>
       )}
       <div className="card-grid">
         {cards.map((card) => (
