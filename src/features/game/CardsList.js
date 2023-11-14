@@ -1,56 +1,155 @@
 import Card from "./Card";
-import { Row, Col } from "reactstrap";
+import { Row, Col, Container } from "reactstrap";
 import { useState } from "react";
 
+const rowCount = 2;
+const colCount = 3;
+const gridSize = rowCount * colCount;
+const cardData = createUniqueCards(gridSize);
+
+function createUniqueCards(gridSize) {
+  const halfGrid = gridSize / 2;
+  const uniqueCards = [];
+  for (let i = 0; i < halfGrid; i++) {
+    uniqueCards.push({ value: i + 1 });
+  }
+  return [...uniqueCards, ...uniqueCards];
+}
+
+function shuffle(array) {
+  let currentIndex = array.length;
+  let randomIndex;
+  // While there remain elements to shuffle.
+  while (currentIndex > 0) {
+    // Pick a remaining element.
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+    // And swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex],
+      array[currentIndex],
+    ];
+  }
+  return array;
+}
+
 const CardsList = () => {
-  const rowCount = 2;
-  const colCount = 3;
-  const gridSize = rowCount * colCount;
+  const [cards, setCards] = useState([]);
+  const [choice1, setChoice1] = useState(null);
+  const [choice2, setChoice2] = useState(null);
+  const [openCards, setOpenCards] = useState([]);
+  const [matchedCards, setMatchedCards] = useState([]);
+  const [moves, setMoves] = useState(0);
 
-  const [cards, setCards] = useState(createUniqueCards(gridSize));
+  const startGame = () => {
+    const shuffledCards = shuffle(cardData).map((card, idx) => ({
+      ...card,
+      id: idx,
+    }));
+    setCards(shuffledCards);
+    setMoves(0);
+  };
 
-  return Array.from({ length: rowCount }, (_, rowIdx) => {
-    return (
-      <Row key={rowIdx}>
-        {Array.from({ length: colCount }, (_, colIdx) => {
-          let cardIdx = rowIdx * colCount + colIdx;
-          return (
-            <Col key={colIdx} id={`card-${cardIdx + 1}`}>
-              <Card id={cardIdx} value={cards[cardIdx]} />
-            </Col>
-          );
-        })}
-      </Row>
-    );
-  });
-
-  function createUniqueCards(gridSize) {
-    const halfGrid = gridSize / 2;
-    const uniqueCards = [];
-    for (let i = 0; i < halfGrid; i++) {
-      uniqueCards.push(i + 1);
+  function checkCards() {
+    if (choice1 === choice2) {
+      // cardMatchCount++;
+      // card1 = null;
+      // card2 = null;
+    } else {
+      // isLockedBoard = true;
+      // setTimeout(hideCards, 1000);
     }
-    const pairCards = uniqueCards.concat(uniqueCards);
-    const cards = shuffle(pairCards);
-    return cards;
   }
 
-  function shuffle(array) {
-    let currentIndex = array.length;
-    let randomIndex;
-    // While there remain elements to shuffle.
-    while (currentIndex > 0) {
-      // Pick a remaining element.
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex--;
-      // And swap it with the current element.
-      [array[currentIndex], array[randomIndex]] = [
-        array[randomIndex],
-        array[currentIndex],
-      ];
-    }
-    return array;
+  // function hideCards() {
+  //   card1.style.display = "block";
+  //   card2.style.display = "block";
+  //   card1.nextElementSibling.style.display = "none";
+  //   card2.nextElementSibling.style.display = "none";
+  //   card1 = null;
+  //   card2 = null;
+  //   isLockedBoard = false;
+  // }
+
+  // function checkWinCondition() {
+  //   if (cardMatchCount < halfGridSize - 1) {
+  //     return false;
+  //   }
+  //   // win early if only 2 cards remain
+  //   stopTimers();
+  //   cardGrid.innerHTML = null;
+  //   cardGrid.textContent = `YOU WIN! It took you ${moveCount} moves.`;
+  //   return true;
+  // }
+
+  // function startGame() {
+  //   resetGame();
+  //   const [x, y] = selectGridSize.value.split("x");
+  //   halfGridSize = (x * y) / 2;
+  //   const gridRows = createCustomGrid(x, y);
+  //   gridRows.forEach((row) => {
+  //     cardGrid.appendChild(row);
+  //   });
+  //   countdownIntervalId = startCountdown();
+  //   timerIntervalId = startTimer();
+  // }
+
+  // function resetGame() {
+  //   card1 = null;
+  //   card2 = null;
+  //   cardMatchCount = 0;
+  //   halfGridSize = 0;
+  //   isLockedBoard = false;
+
+  //   moveCount = 0;
+  //   moveCountSpan.textContent = `Moves: ${moveCount}`;
+
+  //   stopTimers();
+
+  //   cardGrid.innerHTML = null;
+  // }
+
+  function handleClick(card) {
+    // if (isLockedBoard) return;
+
+    !choice1 ? setChoice1(card) : setChoice2(card);
+
+    // moveCount++;
+    // moveCountSpan.textContent = `Moves: ${moveCount}`;
+
+    checkCards();
+    // checkWinCondition();
   }
+
+  return (
+    <Container>
+      <button onClick={startGame}>New Game</button>
+
+      <div className="card-grid">
+        {cards.map((card) => (
+          <Card key={card.id} card={card} onCardClick={handleClick} />
+        ))}
+      </div>
+      {/* {Array.from({ length: rowCount }, (_, rowIdx) => {
+        return (
+          <Row key={rowIdx}>
+            {Array.from({ length: colCount }, (_, colIdx) => {
+              let cardIdx = rowIdx * colCount + colIdx;
+              return (
+                <Col key={colIdx} id={`card-${cardIdx + 1}`}>
+                  <Card
+                    id={cardIdx}
+                    value={cards[cardIdx]}
+                    onCardClick={handleClick}
+                  />
+                </Col>
+              );
+            })}
+          </Row>
+        );
+      })} */}
+    </Container>
+  );
 
   // function createCustomGrid(rowCardLen, colCardLen) {
   //   const gridSize = rowCardLen * colCardLen;
