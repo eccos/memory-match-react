@@ -1,52 +1,18 @@
 import Card from "./Card";
 import { Container, Button } from "reactstrap";
 import { useEffect, useState } from "react";
+import GridSizeSelector from "./GridSizeSelector";
 
-// function createCustomGrid(rowCardLen, colCardLen) {
-//   const gridSize = rowCardLen * colCardLen;
-//   const rowCardLimit = 12;
-//   const colCardLimit = 6;
-//   if (rowCardLen > rowCardLimit) {
-//     console.error(`Row can only have ${rowCardLimit} cards max`);
-//     return;
-//   }
-//   if (colCardLen > colCardLimit) {
-//     console.error(`Column can only have ${colCardLimit} cards max`);
-//     return;
-//   }
-//   if (gridSize % 2 !== 0) {
-//     console.error("Grid cannot have an odd number of cards");
-//     return;
-//   }
-//   const uniqueCards = createUniqueCards(gridSize);
-//   const pairCards = uniqueCards.concat(uniqueCards);
-//   const cards = shuffle(pairCards);
+const gridData = [
+  { row: 2, col: 3, style: "1fr 1fr 1fr" },
+  { row: 2, col: 4, style: "1fr 1fr 1fr 1fr" },
+  { row: 3, col: 6, style: "1fr 1fr 1fr 1fr 1fr 1fr" },
+  { row: 4, col: 8, style: "1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr" },
+  { row: 5, col: 10, style: "1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr" },
+  { row: 6, col: 12, style: "1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr" },
+];
 
-//   const rows = [];
-//   let cardIndex = 0;
-//   for (let row = 0; row < colCardLen; row++) {
-//     // create html row
-//     const row = createDomRow();
-//     for (let col = 0; col < rowCardLen; col++) {
-//       // create html col & create/append card
-//       const col = createDomCol();
-//       const cardId = "card-" + (cardIndex + 1);
-//       const card = createDomFacedownCard(cardId, cards[cardIndex]);
-//       const faceupCard = createDomFaceupCard(cardId, cards[cardIndex]);
-//       cardIndex++;
-//       col.appendChild(card);
-//       col.appendChild(faceupCard);
-//       row.appendChild(col);
-//     }
-//     rows.push(row);
-//   }
-//   return rows;
-// }
-
-const rowCount = 2;
-const colCount = 3;
-const gridSize = rowCount * colCount;
-const cardData = createUniqueCards(gridSize);
+const cardData = createUniqueCards(6);
 
 function createUniqueCards(gridSize) {
   const halfGrid = gridSize / 2;
@@ -75,11 +41,16 @@ function shuffle(array) {
 }
 
 const CardsList = () => {
+  const [selectedGridSize, setSelectedGridSize] = useState(gridData[0]);
   const [cards, setCards] = useState([]);
   const [choice1, setChoice1] = useState(null);
   const [choice2, setChoice2] = useState(null);
   const [turns, setTurns] = useState(0);
   const [isLockedBoard, setIsLockedBoard] = useState(false);
+
+  function handleChange(val) {
+    setSelectedGridSize(val);
+  }
 
   function startGame() {
     const shuffledCards = shuffle(cardData).map((card, idx) => ({
@@ -152,6 +123,11 @@ const CardsList = () => {
         <br />
         <strong>Goal:</strong> <em>Remove all cards from play.</em>
       </p>
+      <GridSizeSelector
+        gridData={gridData}
+        onGridSizeSelectorChange={handleChange}
+        selectedGridSize={selectedGridSize}
+      />
       <Button color="primary" onClick={startGame}>
         New Game
       </Button>
@@ -159,7 +135,10 @@ const CardsList = () => {
       {cards.length > 0 && !cards.find((card) => !card.matched) && (
         <p>YOU WIN! It took you {turns} turns.</p>
       )}
-      <div className="card-grid">
+      <div
+        className="card-grid"
+        style={{ gridTemplateColumns: selectedGridSize.style }}
+      >
         {cards.map((card) => (
           <Card
             key={card.id}
