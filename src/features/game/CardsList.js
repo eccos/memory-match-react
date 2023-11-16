@@ -4,15 +4,13 @@ import { useEffect, useState } from "react";
 import GridSizeSelector from "./GridSizeSelector";
 
 const gridData = [
-  { row: 2, col: 3, style: "1fr 1fr 1fr" },
-  { row: 2, col: 4, style: "1fr 1fr 1fr 1fr" },
-  { row: 3, col: 6, style: "1fr 1fr 1fr 1fr 1fr 1fr" },
-  { row: 4, col: 8, style: "1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr" },
-  { row: 5, col: 10, style: "1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr" },
-  { row: 6, col: 12, style: "1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr" },
+  { row: 2, col: 3 },
+  { row: 2, col: 4 },
+  { row: 3, col: 6 },
+  { row: 4, col: 8 },
+  { row: 5, col: 10 },
+  { row: 6, col: 12 },
 ];
-
-const cardData = createUniqueCards(6);
 
 function createUniqueCards(gridSize) {
   const halfGrid = gridSize / 2;
@@ -47,16 +45,24 @@ const CardsList = () => {
   const [choice2, setChoice2] = useState(null);
   const [turns, setTurns] = useState(0);
   const [isLockedBoard, setIsLockedBoard] = useState(false);
+  const [colStyle, setColStyle] = useState({});
 
   function handleChange(val) {
     setSelectedGridSize(val);
   }
 
   function startGame() {
+    const cardData = createUniqueCards(
+      selectedGridSize.row * selectedGridSize.col
+    );
     const shuffledCards = shuffle(cardData).map((card, idx) => ({
       ...card,
       id: idx,
     }));
+    const newColStyle = {
+      gridTemplateColumns: `1fr `.repeat(selectedGridSize.col),
+    };
+    setColStyle(newColStyle); // Update colStyle using setState
     setCards(shuffledCards);
     setChoice1(null);
     setChoice2(null);
@@ -135,10 +141,7 @@ const CardsList = () => {
       {cards.length > 0 && !cards.find((card) => !card.matched) && (
         <p>YOU WIN! It took you {turns} turns.</p>
       )}
-      <div
-        className="card-grid"
-        style={{ gridTemplateColumns: selectedGridSize.style }}
-      >
+      <div className="card-grid" style={colStyle}>
         {cards.map((card) => (
           <Card
             key={card.id}
