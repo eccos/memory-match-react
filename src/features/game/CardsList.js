@@ -148,6 +148,7 @@ const CardsList = () => {
             card={card}
             onCardClick={handleClick}
             isFaceup={card.matched || [choice1, choice2].includes(card)}
+            isSelected={[choice1, choice2].includes(card)}
           />
         ))}
       </div>

@@ -2,7 +2,7 @@ import CardBack from "../../assets/img/card-back.png";
 import { useState } from "react";
 import ReactCardFlip from "react-card-flip";
 
-const Card = ({ card, onCardClick, isFaceup }) => {
+const Card = ({ card, onCardClick, isFaceup, isSelected }) => {
   const { value } = card;
 
   function handleClick() {
@@ -13,11 +13,14 @@ const Card = ({ card, onCardClick, isFaceup }) => {
     <ReactCardFlip isFlipped={isFaceup} flipDirection="horizontal">
       <img
         src={CardBack}
-        className="img-fluid facedown-card"
+        className="facedown-card"
         alt="facedown card"
         onClick={handleClick}
       />
-      <div alt="faceup card" className="faceup-card selected-card">
+      <div
+        alt="faceup card"
+        className={`faceup-card ${isSelected && "selected-card"}`}
+      >
         {value}
       </div>
     </ReactCardFlip>
