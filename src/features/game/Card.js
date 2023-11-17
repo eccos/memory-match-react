@@ -1,9 +1,27 @@
 import CardBack from "../../assets/img/card-back.png";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import ReactCardFlip from "react-card-flip";
 
-const Card = ({ card, onCardClick, isFaceup, isSelected }) => {
+const Card = ({ card, onCardClick, isFaceup, isSelected, style }) => {
   const { value } = card;
+  const ref = useRef(null);
+
+  useEffect(() => {
+    let animationFrameId;
+
+    const observer = new ResizeObserver((entries) => {
+      animationFrameId = requestAnimationFrame(() => {
+        ref.current.style.fontSize = `${entries[0].contentRect.width / 2}px`;
+      });
+    });
+
+    observer.observe(ref.current);
+
+    return () => {
+      observer.disconnect();
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, []);
 
   function handleClick() {
     onCardClick(card);
@@ -11,15 +29,17 @@ const Card = ({ card, onCardClick, isFaceup, isSelected }) => {
 
   return (
     <ReactCardFlip isFlipped={isFaceup} flipDirection="horizontal">
-      <img
-        src={CardBack}
-        className="facedown-card"
-        alt="facedown card"
-        onClick={handleClick}
-      />
       <div
+        className="game-card facedown-card"
+        onClick={handleClick}
+        alt="facedown card"
+        style={style}
+      ></div>
+      <div
+        className={`game-card faceup-card ${isSelected && "selected-card"}`}
         alt="faceup card"
-        className={`faceup-card ${isSelected && "selected-card"}`}
+        style={style}
+        ref={ref}
       >
         {value}
       </div>
