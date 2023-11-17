@@ -1,4 +1,3 @@
-import CardBack from "../../assets/img/card-back.png";
 import { useState, useRef, useEffect } from "react";
 import ReactCardFlip from "react-card-flip";
 
